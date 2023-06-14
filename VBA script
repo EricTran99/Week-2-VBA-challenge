@@ -1,1 +1,128 @@
+Sub vba_challenge_final()
+
+' setting up variables
+
+Dim lastrow As Long
+Dim lastrow2 As Long
+
+Dim opening_price As Double
+Dim closing_price As Double
+Dim year_change As Double
+Dim stocks As Double
+
+Dim letters As String
+Dim tablerow As Long
+Dim tablerow2 As Long
+Dim percentage As Double
+Dim total_amount As Double
+
+Dim maxYearlyChange As Double
+Dim minYearlyChange As Double
+Dim maxVolume As Double
+
+Dim startrow As Long
+Dim endrow As Long
+Dim grouprange As Range
+Dim topcell As Range
+
+Dim WSnow As Integer
+Dim WSnext As Integer
+
+WSnext = ActiveWorkbook.Worksheets.Count
+
+For WSnow = 1 To WSnext Step 1
+
+startrow = 2
+lastrow = Cells(Rows.Count, 1).End(xlUp).Row
+
+tablerow = 2
+
+
+Range("i1").Value = "Tickers"
+Range("j1").Value = "Yearly Change"
+Range("k1").Value = "Percentage change"
+Range("l1").Value = "Total stock volume"
+Range("m1").Value = "Total open"
+Range("n1").Value = "Total close"
+
+Range("r1").Value = "Tickers"
+Range("s1").Value = "Value"
+Range("q2").Value = "Greatest % increase"
+Range("q3").Value = "Greatest % decrease"
+Range("q4").Value = "Greatest total volume"
+
+
+
+
+ 
+ For i = 2 To lastrow
+
+
+
+If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+    endrow = i
+    Set grouprange = Range("A" & startrow & ":N" & endrow)
+    
+    letters = Cells(i, 1).Value
+    stocks = stocks + Cells(i, 7).Value
+        Range("I" & tablerow).Value = letters
+        Range("L" & tablerow).Value = stocks
+   
+    
+    closing_price = Cells(i, 6).Value
+    Range("N" & tablerow).Value = closing_price
+        
+  
+        stocks = 0
+    Set topcell = Cells(startrow, 1)
+    Range("M" & tablerow).Value = topcell.Offset(0, 2).Value
+      tablerow = tablerow + 1
+    startrow = i + 1
+    
+Else
+    stocks = stocks + Cells(i, 7).Value
+
+End If
+
+Next i
+
+
+tablerow2 = 2
+lastrow2 = Cells(Rows.Count, 14).End(xlUp).Row
+
+For k = 2 To lastrow2
+    year_change = Cells(k, 13).Value - Cells(k, 14).Value
+    Range("J" & tablerow2).Value = year_change
+
+    percentage = year_change
+    Range("K" & tablerow2).Value = percentage
+    Range("K" & tablerow2).NumberFormat = "0.00%"
+    tablerow2 = tablerow2 + 1
+
+maxYearlyChange = WorksheetFunction.Max(Range("J2:J" & lastrow))
+Range("S2").Value = maxYearlyChange
+Range("S2").NumberFormat = "0.00%"
+
+
+
+minYearlyChange = WorksheetFunction.Min(Range("J2:J" & lastrow))
+Range("S3").Value = minYearlyChange
+Range("S3").NumberFormat = "0.00%"
+
+maxVolume = WorksheetFunction.Max(Range("L2:L" & lastrow))
+Range("S4").Value = maxVolume
+
+    
+If Cells(k, 10).Value >= 0 Then
+    Cells(k, 10).Interior.ColorIndex = 4
+Else
+    Cells(k, 10).Interior.ColorIndex = 3
+End If
+
+Next k
+
+Next WSnow
+
+End Sub
+
 
